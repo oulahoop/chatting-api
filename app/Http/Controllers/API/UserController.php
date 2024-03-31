@@ -21,15 +21,17 @@ class UserController extends BaseController
     public function me(): JsonResponse
     {
         $user = auth()->user();
-        $servers = $user->servers()->get();
+        $user->load('servers');
+        //load channels of servers
+        $servers = $user->servers;
+        foreach ($servers as $server) {
+            $server->load('channels');
+        }
+
+
         //$channels = $servers->channels()->get();
 
-        $response = [
-            'user' => $user,
-            'servers' => $servers,
-            /*'channels' => $channels*/
-        ];
-
-        return $this->sendResponse($response, 'User retrieved successfully.');
+    
+        return $this->sendResponse($user, 'User retrieved successfully.');
     }
 }

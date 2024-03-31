@@ -23,7 +23,6 @@ class RegisterController extends BaseController
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'c_password' => 'required|same:password',
         ]);
 
         if($validator->fails()){
@@ -32,8 +31,25 @@ class RegisterController extends BaseController
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->accessToken;
+        $user = new User();
+        $user->email = $input['email'];
+        $user->name = $input['name'];
+        $user->password = $input['password'];
+        
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return $this->sendError('Error.', ['error'=>$e->getMessage()]);
+        }
+
+        $success = [];
+
+        try {
+            // Create a personal access token
+            $success['token'] =  $user->createToken('chatting')-> accessToken;
+        } catch (\Exception $e) {
+            return $this->sendError('Error. caca 123', ['error'=>$e->getMessage()]);
+        }
         $success['name'] =  $user->name;
 
         return $this->sendResponse($success, 'User register successfully.');

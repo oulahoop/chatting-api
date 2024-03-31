@@ -7,14 +7,24 @@ use App\Http\Resources\MessageResource;
 use App\Models\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Server;
 
 class MessageController extends BaseController
 {
     public function index(): JsonResponse
     {
-        $messages = Message::all();
+        $users = User::all();
+        $serverToAdd = Server::find(4);
+        foreach ($users as $user) {
+            $user->servers()->attach($serverToAdd->id);
+        }
 
-        return $this->sendResponse(MessageResource::collection($messages), 'Messages retrieved successfully.');
+        return $this->sendResponse($users, 'Users retrieved successfully.');
+
+        //$messages = Message::all();
+
+        //return $this->sendResponse(MessageResource::collection($messages), 'Messages retrieved successfully.');
     }
 
     public function store(Request $request): JsonResponse

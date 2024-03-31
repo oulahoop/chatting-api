@@ -24,9 +24,9 @@ use App\Http\Controllers\API\ProductController;
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
 Route::get('users', [UserController::class, 'index']);
+Route::get('messages', [MessageController::class, 'index']);
 
 Route::middleware('auth:api')->group( function () {
-    Route::get('messages', [MessageController::class, 'index']);
     Route::post('messages', [MessageController::class, 'store']);
     Route::get('messages/user/{user_id_to}', [MessageController::class, 'getMessageWith']);
     Route::get('messages/channel/{channel_id}', [MessageController::class, 'getChannelMessage']);

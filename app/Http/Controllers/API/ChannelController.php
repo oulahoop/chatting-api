@@ -25,6 +25,6 @@ class ChannelController extends BaseController
         $channel->server_id = $input['server_id'];
         $channel->save();
 
-        return $this->sendResponse(new ChannelResource($channel), 'Channel created successfully.');
+        return $this->sendResponse($channel, 'Channel created successfully.');
     }
 }
